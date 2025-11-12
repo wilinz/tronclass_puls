@@ -1,35 +1,44 @@
 # TronClass Plus
 
-TronClass Plus is an unofficial Flutter client that streamlines everyday campus tasks for Guangxi University of Electronic Technology students. It focuses on fast sign-ins, radar rollcalls, QR check-ins, and a polished multi-account experience across Android, iOS, macOS, Windows, and the web.
+TronClass Plus is an unofficial Flutter client that streamlines everyday campus tasks for Guangxi
+University of Electronic Technology students. It focuses on fast sign-ins, radar rollcalls, QR
+check-ins, and a polished multi-account experience across Android, iOS, macOS, Windows, and the web.
 
 ## Key Features
 
-- **Secure Login & Multi-Account Switcher** – GetX-based authentication with encrypted credential vault, quick user switching, and login history management.
-- **Radar Rollcall Assistant** – Visual radar animation with retry guidance and backend status tracking.
-- **Interactive Map Picker** – Choose rollcall coordinates on OpenStreetMap tiles, reverse-geocode addresses, and automatically convert WGS84 ➜ GCJ-02 before submission.
-- **Tronclass Web Portal** – Built-in WebView (webview_flutter) with cookie sync, captcha handling, user-agent switching, and cache cleaning.
-- **QR & Number Rollcalls** – Dedicated workflows for fast classroom check-ins, including scanning and manual code entry.
-- **Toast & Notification Helpers** – Custom toast utility, localized messaging, and graceful error states.
+- **Secure Login & Multi-Account Switcher** – GetX-based authentication with encrypted credential
+  vault, quick user switching, and login history management.
+- **Radar Rollcall Assistant** – Visual radar animation with retry guidance and backend status
+  tracking.
+- **Interactive Map Picker** – Choose rollcall coordinates on OpenStreetMap tiles, reverse-geocode
+  addresses, and automatically convert WGS84 ➜ GCJ-02 before submission.
+- **Tronclass Web Portal** – Built-in WebView (webview_flutter) with cookie sync, captcha handling,
+  user-agent switching, and cache cleaning.
+- **QR & Number Rollcalls** – Dedicated workflows for fast classroom check-ins, including scanning
+  and manual code entry.
+- **Toast & Notification Helpers** – Custom toast utility, localized messaging, and graceful error
+  states.
 
 ## Screenshots
 
-| Login & Accounts                                       | Radar Rollcall |
-|--------------------------------------------------------| --- |
-| ![Login](screenshot/Screenshot_20251113_025551.png)    | ![Radar](screenshot/Screenshot_20251113_023442.png) |
-| Map Picker                                             | TronClass Portal |
-| ![Map](screenshot/Screenshot_20251113_031906.png)      | ![Portal](screenshot/Screenshot_20251113_023610.png) |
-| Account Manager                                        | QR Rollcall |
-| ![Accounts](screenshot/Screenshot_20251113_023532.png) | ![QR](screenshot/Screenshot_20251113_030024.png) |
+| TronClass Portal                                    | Rollcall List                                          |
+|-----------------------------------------------------|--------------------------------------------------------|
+| ![Radar](screenshot/Screenshot_20251113_023442.png) | ![Accounts](screenshot/Screenshot_20251113_023532.png) |
+| Map Picker                                          | Number Rollcall                                        |
+| ![Map](screenshot/Screenshot_20251113_031906.png)   | ![Portal](screenshot/Screenshot_20251113_023610.png)   |
+| QR Rollcall                                         | Account Manager                                        |
+| ![Login](screenshot/Screenshot_20251113_025551.png) | ![QR](screenshot/Screenshot_20251113_030024.png)       |
 
 ## Getting Started
 
 1. **Environment** – Install Flutter 3.35.0+ with fvm (`fvm install 3.35.0`).
 2. **Dependencies** – `flutter pub get`
 3. **Platform Setup**
-   - Android: `flutter run -d android`
-   - iOS: `cd ios && pod install && cd ..`
-   - Desktop/Web: `flutter run -d macos` / `-d windows` / `-d chrome`
-4. **Config** – Ensure `assets/` and `fonts/` listed in `pubspec.yaml` are kept in sync when adding images or localization files.
+    - Android: `flutter run -d android`
+    - iOS: `cd ios && pod install && cd ..`
+    - Desktop/Web: `flutter run -d macos` / `-d windows` / `-d chrome`
+4. **Config** – Ensure `assets/` and `fonts/` listed in `pubspec.yaml` are kept in sync when adding
+   images or localization files.
 
 ## Project Structure
 
@@ -58,7 +67,8 @@ lib/
 
 # TronClass Plus（中文说明）
 
-TronClass Plus 是面向桂电同学的非官方 Tronclass 客户端，主打签到、雷达点名、二维码签到等场景，同时提供多账号、Web 门户和地图定位等工具，支持 Android / iOS / macOS / Windows / Web。
+TronClass Plus 是面向桂电同学的非官方 Tronclass 客户端，主打签到、雷达点名、二维码签到等场景，同时提供多账号、Web
+门户和地图定位等工具，支持 Android / iOS / macOS / Windows / Web。
 
 ## 核心功能
 
