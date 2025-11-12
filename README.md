@@ -26,6 +26,10 @@ TronClass Plus 是面向桂电同学的非官方 Tronclass 客户端，主打签
 - encrypt + get_storage 密钥存储
 - dio, share_plus, permission_handler 等常用插件
 
+## TODO
+
+1. 抽象学校层：提供统一登录接口或 WebView 适配层，降低适配其他学校的成本。
+
 ## 截图
 
 | TronClass Portal                                    | Rollcall List                                          |
@@ -88,10 +92,6 @@ lib/
 - **flutter_map + geolocator + geocoding** for selecting and reverse-geocoding locations
 - **encrypt + get_storage** for secure multi-account storage
 - **share_plus, permission_handler, dio** for platform capabilities and networking
-
-## TODO
-
-1. 抽象学校层：提供统一登录接口或 WebView 适配层，降低适配其他学校的成本。
 
 ------
 
