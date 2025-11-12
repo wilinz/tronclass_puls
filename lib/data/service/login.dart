@@ -69,6 +69,14 @@ class LoginService {
     // 获取登录页面
     var uri = firstGetUrl ?? "authserver/login";
 
+    // 解决 cookie 不够误报密码错误的问题
+    for (int retryCount = 0; retryCount < 3; retryCount++){
+      await casDio.get(
+        uri,
+        queryParameters: firstGetQueryParameters ?? {'service': service},
+      );
+    }
+
     var resp = await casDio.get(
       uri,
       queryParameters: firstGetQueryParameters ?? {'service': service},
