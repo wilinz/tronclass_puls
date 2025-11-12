@@ -11,9 +11,9 @@ import 'package:tronclass/main.dart';
 
 void main() {
   testWidgets('App renders root page', (tester) async {
-    await tester.pumpWidget(const TronclassApp());
+    await tester.pumpWidget(const TronClassPlusApp());
     await tester.pumpAndSettle();
 
-    expect(find.byType(TronclassApp), findsOneWidget);
+    expect(find.byType(TronClassPlusApp), findsOneWidget);
   });
 }

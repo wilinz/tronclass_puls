@@ -1,0 +1,151 @@
+name: Release Android
+# ANDROID_KEY_BASE64
+# ANDROID_KS_PASS
+# ANDROID_KEY_ALIAS
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Extract Version from pubspec.yaml
+        id: extract_version
+        run: |
+          version=$(grep '^version: ' pubspec.yaml | sed 's/version: //' | cut -d '+' -f 1)
+          echo "PUBSPEC_VERSION=$version" >> $GITHUB_ENV
+
+      - name: Compare Version with Git Tag
+        run: |
+          pubspec_version="${{ env.PUBSPEC_VERSION }}"
+          git_tag="${{ github.ref_name }}"
+          echo "Version from pubspec.yaml: $pubspec_version"
+          echo "Git tag from push: $git_tag"
+          if [ "$pubspec_version" != "$git_tag" ]; then
+            echo "Version ($pubspec_version) does not match Git tag ($git_tag)."
+            exit 1
+          else
+            echo "Version matches the Git tag."
+          fi
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:' # optional, change this to force refresh cache
+          cache-path: '${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:' # optional, change this to specify the cache path
+          architecture: x64 # optional, x64 or arm64
+          flutter-version: 3.35.0
+      - run: flutter --version
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.android/build-cache
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache Android build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            android/.gradle
+            android/build
+          key: ${{ runner.os }}-android-build-${{ hashFiles('android/**/*.gradle*', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-android-build-
+
+      - name: Build for Android
+        run: flutter build apk --release
+
+      - name: Key base64 to file
+        uses: timheuer/base64-to-file@v1.2
+        with:
+          fileName: 'android_key.jks'
+          fileDir: '/tmp/.android_key/'
+          encodedString: ${{ secrets.ANDROID_KEY_BASE64 }}
+
+      - name: Install apksigner
+        run: sudo apt install apksigner
+
+      - name: Sign apk
+        env:
+          ANDROID_KS_PASS: ${{ secrets.ANDROID_KS_PASS }}
+        run: |
+          for file in build/app/outputs/flutter-apk/*.apk; do
+                filename="${file##*/}"
+                echo "Signing ${filename}"
+                apksigner sign --v4-signing-enabled false --ks /tmp/.android_key/android_key.jks --ks-pass env:ANDROID_KS_PASS --ks-key-alias ${{ secrets.ANDROID_KEY_ALIAS }} ${file}
+              done
+
+      - name: Get apk info
+        id: apk-info
+        uses: hkusu/apk-info-action@v1
+        with:
+          apk-path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Rename Apk And Move Apk
+        run: |
+          mkdir -p build/app/outputs/my-release
+          cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/my-release/tronclass-android-v${{ steps.apk-info.outputs.version-name }}.apk
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/app/outputs/my-release/tronclass-android-v${{ steps.apk-info.outputs.version-name }}.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Upload apk to artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: guethub-android-v${{ steps.apk-info.outputs.version-name }}.apk
+#          path: build/app/outputs/my-release/guethub-android-v${{ steps.apk-info.outputs.version-name }}.apk
+
+#      - name: Upload x86_64 to artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: app-x86_64-release.apk
+#          path: build/app/outputs/flutter-apk/app-x86_64-release.apk
+#
+#      - name: Upload arm64-v8a to artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: app-arm64-v8a-release.apk
+#          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+#
+#      - name: Upload armeabi-v7a to artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: app-armeabi-v7a-release.apk
+#          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+
+#      - name: Package as zip
+#        run: |
+#          cd build/windows/runner/Debug
+#          zip -q -r ../guet-toolbox-windows-debug.zip ./*
+#          cd ../../../../
+#
+#      - name: Upload to artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: guet-toolbox-windows-debug.zip
+#          path: build/windows/runner/guet-toolbox-windows-debug.zip

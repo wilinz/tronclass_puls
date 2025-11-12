@@ -21,11 +21,11 @@ Future<void> main() async {
   } else {
     ChangkeClient.getInstance();
   }
-  runApp(const TronclassApp());
+  runApp(const TronClassPlusApp());
 }
 
-class TronclassApp extends StatelessWidget {
-  const TronclassApp({super.key});
+class TronClassPlusApp extends StatelessWidget {
+  const TronClassPlusApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class TronclassApp extends StatelessWidget {
       ),
       child: GetMaterialApp(
         navigatorKey: AppRoute.navigatorKey,
-        title: 'Tronclass Sign-in',
+        title: 'TronClass Plus',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,

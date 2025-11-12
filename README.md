@@ -1,6 +1,6 @@
-# Tronclass Companion
+# TronClass Plus
 
-Tronclass Companion is an unofficial Flutter client that streamlines everyday campus tasks for Guangxi University of Electronic Technology students. It focuses on fast sign-ins, radar rollcalls, QR check-ins, and a polished multi-account experience across Android, iOS, macOS, Windows, and the web.
+TronClass Plus is an unofficial Flutter client that streamlines everyday campus tasks for Guangxi University of Electronic Technology students. It focuses on fast sign-ins, radar rollcalls, QR check-ins, and a polished multi-account experience across Android, iOS, macOS, Windows, and the web.
 
 ## Key Features
 
@@ -13,12 +13,12 @@ Tronclass Companion is an unofficial Flutter client that streamlines everyday ca
 
 ## Screenshots
 
-| Login & Accounts | Radar Rollcall |
-| --- | --- |
-| ![Login](screenshot/Screenshot_20251113_025551.png) | ![Radar](screenshot/Screenshot_20251113_023442.png) |
-| Map Picker | Tronclass Portal |
-| ![Map](screenshot/Screenshot_20251113_023630.png) | ![Portal](screenshot/Screenshot_20251113_023610.png) |
-| Account Manager | QR Rollcall |
+| Login & Accounts                                       | Radar Rollcall |
+|--------------------------------------------------------| --- |
+| ![Login](screenshot/Screenshot_20251113_025551.png)    | ![Radar](screenshot/Screenshot_20251113_023442.png) |
+| Map Picker                                             | TronClass Portal |
+| ![Map](screenshot/Screenshot_20251113_031906.png)      | ![Portal](screenshot/Screenshot_20251113_023610.png) |
+| Account Manager                                        | QR Rollcall |
 | ![Accounts](screenshot/Screenshot_20251113_023532.png) | ![QR](screenshot/Screenshot_20251113_030024.png) |
 
 ## Getting Started
@@ -50,11 +50,15 @@ lib/
 - **encrypt + get_storage** for secure multi-account storage
 - **share_plus, permission_handler, dio** for platform capabilities and networking
 
+## TODO
+
+1. 抽象学校层：提供统一登录接口或 WebView 适配层，降低适配其他学校的成本。
+
 ---
 
-# Tronclass Companion（中文说明）
+# TronClass Plus（中文说明）
 
-Tronclass Companion 是面向桂电同学的非官方 Tronclass 客户端，主打签到、雷达点名、二维码签到等场景，同时提供多账号、Web 门户和地图定位等工具，支持 Android / iOS / macOS / Windows / Web。
+TronClass Plus 是面向桂电同学的非官方 Tronclass 客户端，主打签到、雷达点名、二维码签到等场景，同时提供多账号、Web 门户和地图定位等工具，支持 Android / iOS / macOS / Windows / Web。
 
 ## 核心功能
 

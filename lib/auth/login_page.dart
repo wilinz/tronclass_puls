@@ -73,7 +73,7 @@ class LoginPage extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 12),
                                   Text(
-                                    '登录 Tronclass',
+                                    '登录 TronClass Plus',
                                     style: Theme.of(
                                       context,
                                     ).textTheme.titleLarge,
@@ -82,7 +82,7 @@ class LoginPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                '使用教务系统账户登录 Tronclass，进行扫码签到',
+                                '使用教务系统账户登录 TronClass Plus，进行扫码签到',
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                               ),
