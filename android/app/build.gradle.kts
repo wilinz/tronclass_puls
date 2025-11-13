@@ -1,8 +1,18 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.reader(Charsets.UTF_8).use { reader ->
+        localProperties.load(reader)
+    }
 }
 
 android {
@@ -30,15 +40,35 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("release") {
+            if (localProperties["storeFile"] != null) {
+                storeFile = file(localProperties["storeFile"] as String)
+                storePassword = localProperties["storePassword"] as String
+                keyAlias = localProperties["keyAlias"] as String
+                keyPassword = localProperties["keyPassword"] as String
+            } else {
+                println("Release build signing not configured. Use debug signing.")
+            }
+        }
+//        getByName("debug") {
+//            storeFile = file("../debug-store-file/debug.keystore")
+//            storePassword = "android"
+//        }
+    }
+
     buildTypes {
         release {
             ndk {
                 abiFilters.clear()
                 abiFilters.add("arm64-v8a")
             }
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            if (localProperties["storeFile"] != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true
+            isShrinkResources = true
         }
     }
 }
