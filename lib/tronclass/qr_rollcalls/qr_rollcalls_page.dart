@@ -421,7 +421,7 @@ class _QrSignResultPageState extends State<QrSignResultPage> {
       final int? id = responseData?["id"];
       final String? status = responseData?["status"];
       final bool isSuccessful =
-          response.statusCode == 200 && id != null && status == "on_call";
+          response.statusCode == 200 && status == "on_call";
 
       if (mounted) {
         setState(() {

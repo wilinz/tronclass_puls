@@ -64,7 +64,7 @@ class NumberRollcallsController extends GetxController {
     final int? id = responseData?["id"];
     final String? status = responseData?["status"];
     final bool isSuccessful =
-        response.statusCode == 200 && id != null && status == "on_call";
+        response.statusCode == 200 && status == "on_call";
 
     // String message = isSuccessful
     // ? "签到成功"
