@@ -117,7 +117,7 @@ class _NumberRollcallsPageState extends State<NumberRollcallsPage>
                     const SizedBox(height: 10),
                     const Text("请输入签到密码", style: TextStyle(fontSize: 14, color: Colors.white)),
                     const SizedBox(height: 8),
-                                         // 验证码输入框
+                     // 验证码输入框
                      Padding(
                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
                        child: Obx(() => AdvancedCodeInput(
@@ -139,11 +139,57 @@ class _NumberRollcallsPageState extends State<NumberRollcallsPage>
                              controller.clearError();
                            }
                          },
-                         onCompleted: (code) {
-                           controller.submitCode(code);
-                         },
-                       )),
-                     ),
+                       onCompleted: (code) {
+                          controller.submitCode(code);
+                        },
+                      )),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      '若已知道签到码请直接输入并提交，勿频繁使用一键签到。',
+                      style: TextStyle(fontSize: 12, color: Colors.white70),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    Obx(() => SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: const Color(0xFF00A9C0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            onPressed: controller.isBruteForcing.value
+                                ? null
+                                : () => _confirmBruteForce(context),
+                            icon: Icon(controller.isBruteForcing.value
+                                ? Icons.hourglass_top
+                                : Icons.flash_on),
+                            label: Text(controller.isBruteForcing.value
+                                ? '一键签到中...'
+                                : '一键签到'),
+                          ),
+                        )),
+                    const SizedBox(height: 12),
+                    Obx(() {
+                      if (controller.isBruteForcing.value ||
+                          controller.bruteForceAttempts.value > 0) {
+                        final attempts = controller.bruteForceAttempts.value;
+                        final statusText = controller.isBruteForcing.value
+                            ? '窗口并发 100，已尝试 ${attempts.toString().padLeft(4, '0')}/10000'
+                            : '已尝试 ${attempts.toString().padLeft(4, '0')} 个签到码';
+                        return Text(
+                          statusText,
+                          style: const TextStyle(
+                              fontSize: 12, color: Colors.white70),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
                     // const SizedBox(height: 20),
                     // const Text(
                     //   "长按输入框可以粘贴或清空",
@@ -240,6 +286,19 @@ class _NumberRollcallsPageState extends State<NumberRollcallsPage>
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
+                                      if (isSuccess &&
+                                          controller.successCode.value.isNotEmpty)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                            '签到码：${controller.successCode.value}',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -300,6 +359,33 @@ class _NumberRollcallsPageState extends State<NumberRollcallsPage>
         ),
       ),
     );
+  }
+
+  Future<void> _confirmBruteForce(BuildContext context) async {
+    if (controller.isBruteForcing.value) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('确认一键签到'),
+        content: const Text(
+            '系统会并发尝试全部 0000-9999 签到码。请确保无法自行获取签到码再使用，确定继续？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('继续'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      controller.bruteForceSignCodes();
+    }
   }
 
 
