@@ -95,16 +95,11 @@ class ChangkeClient {
           RedirectInterceptor(() => instance.casDio),
         ]);
 
-      setupHttpProxy(
-        instance.dio,
-        proxyUrl: "http://172.16.0.163:9000",
-        allowBadCertificate: true,
-      );
-      setupHttpProxy(
-        instance.casDio,
-        proxyUrl: "http://172.16.0.163:9000",
-        allowBadCertificate: true,
-      );
+      // setupHttpProxy(
+      //   instance.casDio,
+      //   proxyUrl: "http://172.16.0.163:9000",
+      //   allowBadCertificate: true,
+      // );
 
       // 从 GetStorage 同步读取 session
       instance._sessionId = getStorage.read<String>(instance._sessionKey);
