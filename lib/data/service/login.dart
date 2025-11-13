@@ -82,7 +82,7 @@ class LoginService {
     check401(resp);
 
     // 解决 cookie 不够误报密码错误的问题
-    for (int retryCount = 0; retryCount < 3; retryCount++){
+    for (int retryCount = 0; retryCount < 2; retryCount++){
       resp = await casDio.get(
         uri,
         queryParameters: firstGetQueryParameters ?? {'service': service},
@@ -177,6 +177,60 @@ class LoginService {
       throw RequireLoginVerificationCodeException('Verification code required');
     }
   }
+
+  static Future<DynamicCodeResponse> sendDynamicCode({
+    required Dio dio,
+    required String username,
+  }) async {
+    final resp = await dio.post(
+      "authserver/dynamicCode/getDynamicCodeByReauth.do",
+      data: {
+        "userName": username,
+        "authCodeTypeName": "reAuthDynamicCodeType",
+      },
+      options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+        responseType: ResponseType.plain,
+      ),
+    );
+
+    final dynamic raw = resp.data;
+    final Map<String, dynamic> data = raw is Map
+        ? Map<String, dynamic>.from(raw as Map)
+        : Map<String, dynamic>.from(jsonDecode(raw.toString()));
+    return DynamicCodeResponse.fromJson(data);
+  }
+
+  static Future<ReAuthResponse> reAuthCheck({
+    required Dio dio,
+    required String code,
+  }) async {
+    final resp = await dio.post(
+      "authserver/reAuthCheck/reAuthSubmit.do",
+      data: {
+        "service": "",
+        "reAuthType": 3,
+        "isMultifactor": true,
+        "password": "",
+        "dynamicCode": code,
+        "uuid": "",
+        "answer1": "",
+        "answer2": "",
+        "otpCode": "",
+        "skipTmpReAuth": true,
+      },
+      options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+        responseType: ResponseType.json,
+      ),
+    );
+
+    final dynamic raw = resp.data;
+    final Map<String, dynamic> data = raw is Map
+        ? Map<String, dynamic>.from(raw as Map)
+        : Map<String, dynamic>.from(jsonDecode(raw.toString()));
+    return ReAuthResponse.fromJson(data);
+  }
 }
 
 typedef CaptchaHandler = Future<String> Function(Uint8List image);
@@ -197,4 +251,43 @@ class RequireLoginVerificationCodeException implements Exception {
 
   @override
   String toString() => msg;
+}
+
+class DynamicCodeResponse {
+  final String? res;
+  final String? mobile;
+  final String? returnMessage;
+  final int? codeTime;
+
+  DynamicCodeResponse({
+    this.res,
+    this.mobile,
+    this.returnMessage,
+    this.codeTime,
+  });
+
+  factory DynamicCodeResponse.fromJson(Map<String, dynamic> json) {
+    return DynamicCodeResponse(
+      res: json['res'] as String?,
+      mobile: json['mobile'] as String?,
+      returnMessage: json['returnMessage'] as String?,
+      codeTime: json['codeTime'] is int
+          ? json['codeTime'] as int
+          : int.tryParse(json['codeTime']?.toString() ?? ''),
+    );
+  }
+}
+
+class ReAuthResponse {
+  final String? code;
+  final String? msg;
+
+  ReAuthResponse({this.code, this.msg});
+
+  factory ReAuthResponse.fromJson(Map<String, dynamic> json) {
+    return ReAuthResponse(
+      code: json['code'] as String?,
+      msg: json['msg'] as String?,
+    );
+  }
 }
