@@ -5,15 +5,14 @@ import 'package:get/get.dart';
 import 'package:kt_dart/kt.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tronclass/data/changke_client.dart';
 import 'package:vibration/vibration.dart';
 import 'package:uuid/uuid.dart';
 
-import 'package:tronclass/data/changke_client.dart';
-import 'package:tronclass/data/service/tronclass.dart';
-import 'package:tronclass/data/util/changke.dart';
-
-import 'package:tronclass/tronclass/common.dart';
-import 'package:tronclass/tronclass/qr_rollcalls/sign_result.dart';
+import '../../../../data/service/tronclass.dart';
+import '../../../../data/util/changke.dart';
+import '../common.dart';
+import 'sign_result.dart';
 
 class QrRollcallsPage extends StatefulWidget {
   const QrRollcallsPage({super.key});
@@ -185,11 +184,10 @@ class _QrRollcallsPageState extends State<QrRollcallsPage>
               // 处理扫描结果
               _handleScanResult(capture);
             },
-            overlayBuilder:
-                (BuildContext context, BoxConstraints constraints) =>
-                    Positioned(
-              child: ScannerBox(width: 300, height: 300),
-            ),
+          overlayBuilder:
+              (BuildContext context, BoxConstraints constraints) => Center(
+            child: ScannerBox(width: 300, height: 300),
+          ),
           ),
         ),
       );
