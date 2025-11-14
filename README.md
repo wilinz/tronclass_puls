@@ -10,6 +10,10 @@ TronClass Plus 是面向桂电同学的非官方 Tronclass 客户端，主打签
 - **地图定位**：基于 OpenStreetMap 的地点选择器，支持逆地理编码、WGS84 ➜ GCJ-02 自动转换。
 - **Tronclass Web 入口**：内置 WebView 同步 Cookie、验证码弹窗、桌面/移动 UA 切换、缓存清理。
 - **二维码 / 数字签到**：独立页面快速扫码或填码，配合 ChangkeClient 完成后台请求。
+
+## 已知问题 / 兼容性提示
+
+- **Release 模式的二维码扫描必须使用非 `Positioned` 的 overlay**：`MobileScanner.overlayBuilder` 若直接返回 `Positioned`（父节点不是 `Stack`），Debug 模式只发出警告，但 Release 会抛出 `type 'ParentData' is not a subtype of type 'StackParentData'` 并导致相机预览灰屏。现已改为 `Center` 包裹的自定义扫描框；调整 overlay 时务必保持这一约束。
 - **消息提示**：丰富的 Toast 成功/失败提示与本地化文案。
 
 ## 下载
